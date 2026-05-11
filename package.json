@@ -1,0 +1,13 @@
+{
+  "name": "permadata-demo",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Permadata Protocol Demo — No SDK Required",
+  "scripts": {
+    "stamp": "node demo.mjs"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "@mongodb-js/zstd": "^1.2.2"
+  }
+}
