@@ -192,6 +192,9 @@ fix.writeUInt32LE(payload.length, 17);
 fix.writeUInt32LE(checksum, 21);
 pHash.copy(fix, 25);
 
+// Treasury wallet — receives protocol fee on finalize
+const TREASURY = new PublicKey('FSD3mywrvcFKE8AB4mwwQJkeHaftYsmtGw8cux6EhiR6');
+
 const ftx = new Transaction()
   .add(ComputeBudgetProgram.setComputeUnitLimit({ units: 400_000 }))
   .add(new TransactionInstruction({
@@ -199,6 +202,7 @@ const ftx = new Transaction()
     keys: [
       { pubkey: stampPda,               isSigner: false, isWritable: true },
       { pubkey: wallet.publicKey,       isSigner: true,  isWritable: true },
+      { pubkey: TREASURY,               isSigner: false, isWritable: true },
       { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
       ...chunkPdas.map(p => ({ pubkey: p, isSigner: false, isWritable: false })),
     ],
