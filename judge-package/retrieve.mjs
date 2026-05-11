@@ -16,8 +16,8 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { gunzipSync, inflateSync } from 'zlib';
 import { writeFileSync } from 'fs';
 
-const RPC  = 'https://rpc.mainnet.x1.xyz';
-const PROG = new PublicKey('BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq');
+const RPC  = 'https://api.mainnet-beta.solana.com';
+const PROG = new PublicKey('ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi');
 const MEMO = 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr';
 const conn = new Connection(RPC, 'confirmed');
 
@@ -50,7 +50,7 @@ const PREFIX = `PERM:${stampHex}:`;
 
 console.log(`\n${'═'.repeat(55)}`);
 console.log(`  Permadata Protocol — Retrieve`);
-console.log(`  Program: BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq`);
+console.log(`  Program: ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi`);
 console.log(`${'═'.repeat(55)}`);
 console.log(`  Stamp ID: ${stampHex}`);
 console.log(`  Reading stamp record from chain...`);

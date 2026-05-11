@@ -27,8 +27,8 @@ import { homedir } from 'os';
 import { basename } from 'path';
 
 // ── Config ─────────────────────────────────────────────────────
-const RPC      = 'https://rpc.mainnet.x1.xyz';
-const PROG     = new PublicKey('BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq');
+const RPC      = 'https://api.mainnet-beta.solana.com';
+const PROG     = new PublicKey('ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi');
 const MEMO_PK  = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 const MAX_CHUNK = 500;
 const MAX_SIZE  = MAX_CHUNK * 512; // ~256KB max single stamp
@@ -105,7 +105,7 @@ for (let i = 0; i < payload.length; i += MAX_CHUNK) {
 
 console.log(`\n${'═'.repeat(55)}`);
 console.log(`  Permadata Protocol — Stamp`);
-console.log(`  Program: BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq`);
+console.log(`  Program: ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi`);
 console.log(`${'═'.repeat(55)}`);
 console.log(`  File:     ${basename(fullPath)} (${payload.length} bytes)`);
 console.log(`  Stamp ID: ${stampHex}`);
@@ -217,6 +217,6 @@ console.log(`${'═'.repeat(55)}`);
 console.log(`  Stamp ID:  ${stampHex}`);
 console.log(`  File:      ${basename(fullPath)}`);
 console.log(`  Tx:        ${sig}`);
-console.log(`  Explorer:  https://explorer.x1.xyz/tx/${sig}`);
+console.log(`  Explorer:  https://explorer.solana.com/tx/${sig}`);
 console.log(`\n  To retrieve: node retrieve.mjs ${stampHex}`);
 console.log(`${'═'.repeat(55)}\n`);
