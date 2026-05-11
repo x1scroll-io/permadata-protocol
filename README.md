@@ -1,245 +1,196 @@
 # Permadata Protocol
 
-**Permanent, compressed, chain-enforced data storage on X1.**
-
-No UI. No server. No SDK required. The chain is the law.
-
----
-
-## What It Is
-
-Permadata is an open protocol for stamping any data permanently on the X1 blockchain. Once stamped, the data is:
-
-- **Permanent** — stored in transaction history forever
-- **Verifiable** — SHA256 hash + CRC32 checksum enforced on-chain
-- **Compressed** — zstd compression reduces cost by 2–15x depending on data type
-- **Trustless** — the on-chain program enforces the format; no trust in us required
-
-**Cost:** ~0.003–0.015 XNT per stamp (~$0.003–$0.013 at current XNT price). Permanent, no recurring fees.
+**Permanent data storage on Solana. Replicated across 2,000+ validators.**  
+**Zero servers. Zero hosting. Zero trust. Pay once, live forever.**
 
 ---
 
-## Live on X1 Mainnet
+## 🔴 Everyone else gives you a pointer. We give you the data.
 
-| | |
-|---|---|
-| **Program ID** | `BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq` |
-| **RPC** | `https://rpc.mainnet.x1.xyz` |
-| **Chain** | X1 Mainnet (SVM-compatible) |
-| **Chunk size** | 500 bytes |
-| **Spec** | [SPEC.md](./SPEC.md) |
+Most "permanent" storage is lying to you:
+- **Arweave** → stamps a hash on Solana, stores data on a different chain
+- **IPFS** → dies when pinning services stop paying
+- **Shadow Drive** → went dark for months in 2023
+- **Magic Eden CDN** → centralized, they control your NFT metadata
+
+**Permadata stores data directly in Solana transaction history.** Every validator holds a copy. No server to go offline. No subscription to forget to pay. No company to go bankrupt.
 
 ---
 
-## Quick Start (Node.js)
+## 🚀 Live on Mainnet
 
-### Install dependencies
+| Chain | Program ID | Status |
+|-------|-----------|--------|
+| **Solana** | `ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi` | ✅ **Live** |
+| X1 Network | `BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq` | ✅ Live (proves portability) |
 
+---
+
+## 💰 Protocol Economics
+
+| Operation | Cost | Fee |
+|-----------|------|-----|
+| `register_chunk` | Network fee only | FREE |
+| `finalize_stamp` | ~◎0.000575 SOL (~$0.05) | Enforced on-chain |
+| `verify_stamp` | Network fee only | FREE |
+
+Fees are **hardcoded in the program** — cannot be bypassed by any caller.  
+Treasury: `FSD3mywrvcFKE8AB4mwwQJkeHaftYsmtGw8cux6EhiR6`
+
+---
+
+## ⚡ Quick Start (No SDK Required)
+
+**Setup:**
 ```bash
-npm install @solana/web3.js @mongodb-js/zstd
+mkdir permadata && cd permadata
+npm init -y
+npm install @solana/web3.js@1.91.8 rpc-websockets@7.5.1 @mongodb-js/zstd
+curl -s https://raw.githubusercontent.com/x1scroll-io/permadata-protocol/main/judge-package/stamp.mjs -o stamp.mjs
+curl -s https://raw.githubusercontent.com/x1scroll-io/permadata-protocol/main/judge-package/retrieve.mjs -o retrieve.mjs
 ```
 
-### Stamp a file
-
+**Stamp any file:**
 ```bash
-node demo.mjs myfile.txt --codec text
+node stamp.mjs mydocument.txt
+# Stamp ID: a75abaf30ee0
+# Explorer: https://explorer.solana.com/tx/4wjjeeh...
 ```
 
-### Retrieve by Stamp ID
-
+**Delete it. Retrieve it from chain:**
 ```bash
-node retrieve.mjs <stamp_id_hex> --out recovered.txt
+rm mydocument.txt
+node retrieve.mjs a75abaf30ee0
+# Permadata Protocol - Arnett Esters - Detroit - Mon May 11...
+# No server. No trust. Data lives on Solana forever.
 ```
 
-### Example output
-
-```
-✅ STAMP COMPLETE
-  Stamp ID:     60812828cde4
-  Program:      BYRRLvZyzxLnfoaqea3pL9zY24S6Xd2uvoDHXFiw7LMq
-  Codec:        0x02 (text)
-  Chunks:       1
-  Data:         135 → 117 bytes (1.15x)
-  Cost:         ~0.000116 XNT
-
-🔗 Permanent. Immutable. On-chain. No server required.
-```
-
-```
-✅ RETRIEVAL COMPLETE
-  Stamp ID:     60812828cde4
-  CRC32:        ✅ verified
-  Hash:         ✅ verified
-  Integrity:    ✅ PERFECT
-
-🔗 Data retrieved from X1 chain. No server. No trust required.
-```
+**That's it.** Node.js + a funded wallet. No SDK. No API key. No account.
 
 ---
 
-## How It Works
+## 🎨 Use Cases
 
-```
-YOUR DATA
-    ↓
-[1] Add Permadata header (PERD magic + codec + CRC32 + length)
-    ↓
-[2] Compress with zstd level 3
-    ↓
-[3] Split into 500-byte chunks
-    ↓
-[4] For each chunk:
-    ├── Store chunk data in transaction MEMO field (permanent)
-    └── Register chunk SHA256 hash via on-chain program (enforced)
-    ↓
-[5] Finalize: on-chain program seals the StampRecord PDA (immutable)
-    ↓
-─── ON CHAIN FOREVER ───
-    ↓
-[6] Retrieve: fetch PDAs → scan tx logs → verify hashes
-    ↓
-[7] Decompress → verify CRC32 → original file ✅
-```
+**NFT Metadata Permanence**  
+NFT images and metadata hosted on IPFS or CDNs become 404s when services die. Stamp metadata to Permadata before minting — your art lives in Solana transaction history forever. No Magic Eden. No Pinata. No expiration.
+
+**AI Agent Persistent Memory**  
+AI agents need memory that survives server crashes, company shutdowns, and billing failures. Stamp knowledge, decisions, and datasets on-chain. Permadata is permanent storage for autonomous systems.
+
+**Legal & Document Notarization**  
+Stamp contracts, deeds, and agreements with cryptographic proof of existence at a specific moment. $0.05. No lawyer. No notary. No expiration.
+
+**Music & Creative Rights**  
+Artists stamp master recordings before release. Proof of authorship. Proof of date. Forever. No streaming platform owns your master.
+
+**Scientific Data Integrity**  
+Researchers stamp datasets before publication. Immutable proof that data was not modified after results were known.
 
 ---
 
-## Build Your Own Client
+## 🔧 10 Codec Types (All Enforced On-Chain)
 
-You don't need our scripts. Any developer can implement Permadata directly from the spec.
+| Codec | Byte | Compression | Use Case |
+|-------|------|-------------|---------|
+| RAW | `0x01` | 1x | Any raw bytes |
+| UTF8_TEXT | `0x02` | 2x–5x | Documents, legal, receipts |
+| UTF8_EN | `0x03` | 3x–5x | English prose |
+| MATHSCI | `0x04` | 5x–10x | Scientific/sensor data |
+| CBOR | `0x05` | 1.5x–3x | Structured data |
+| IMAGE | `0x06` | 1x–8x | Photos, NFTs, medical scans |
+| AUDIO | `0x07` | 1x–6x | Music, voice, podcasts |
+| VIDEO | `0x08` | 1x–50x | Clips, film, evidence |
+| BINARY | `0x09` | 1x | Code, firmware, executables |
+| MULTIPART | `0x0A` | — | Large files up to ~65MB |
 
-### Instruction: `register_chunk`
-
-```
-Discriminator: sha256("global:register_chunk")[0:8]
-
-Accounts:
-  [writable] chunk_record PDA  seeds=["perm_chunk", stamp_id(6), chunk_index_le(2)]
-  [writable, signer] payer
-  [] system_program
-
-Data (little-endian):
-  stamp_id:       [u8; 6]   — first 6 bytes of sha256(compressed_payload)
-  chunk_index:    u16       — 0-based
-  chunk_total:    u16       — total chunks
-  chunk_hash:     [u8; 32]  — sha256(chunk_data)
-  chunk_crc:      u32       — crc32(chunk_data)
-  chunk_data_len: u16       — actual bytes in this chunk (max 500)
-
-Memo (separate tx, same session):
-  "PERM:<stamp_id_hex>:<chunk_index>:<chunk_total>:<base64(chunk_data)>"
-```
-
-### Instruction: `finalize_stamp`
-
-```
-Discriminator: sha256("global:finalize_stamp")[0:8]
-
-Accounts:
-  [writable] stamp_record PDA  seeds=["perm_stamp", stamp_id(6)]
-  [writable, signer] payer
-  [] system_program
-  [] chunk_record PDAs (remaining accounts, all chunks in order)
-
-Data (little-endian):
-  stamp_id:      [u8; 6]
-  chunk_total:   u16
-  codec_type:    u8        — 0x01=RAW, 0x02=UTF8_TEXT, 0x03=UTF8_EN, 0x04=MATHSCI, 0x05=CBOR
-  data_length:   u32       — original uncompressed data length
-  checksum:      u32       — crc32(original data)
-  payload_hash:  [u8; 32]  — sha256(compressed_payload)
-```
-
-### Instruction: `verify_stamp` (read-only)
-
-```
-Discriminator: sha256("global:verify_stamp")[0:8]
-
-Accounts:
-  [] stamp_record PDA
-
-Returns metadata in program logs:
-  "PERMADATA_VERIFY stamp=<hex> codec=<hex> chunks=<n> bytes=<n> hash=<hex> slot=<n> ok=true"
-```
+Each codec enforces a magic header on every chunk. Invalid format = rejected transaction.
 
 ---
 
-## Codec Types
-
-| ID | Name | Description |
-|----|------|-------------|
-| `0x01` | RAW | Raw bytes, zstd compressed |
-| `0x02` | UTF8_TEXT | UTF-8 text, any language |
-| `0x03` | UTF8_EN | English-optimized text |
-| `0x04` | MATHSCI | Math/science structured data |
-| `0x05` | CBOR | CBOR-encoded objects |
-
----
-
-## Permadata Header Format
-
-Every payload begins with a 16-byte header before compression:
+## 📐 Architecture
 
 ```
-Offset  Size  Field
-0       4     Magic: 0x50455244 ("PERD")
-4       1     Protocol version: 0x01
-5       1     Codec type (see above)
-6       2     Reserved: 0x0000
-8       4     Original data length (u32 LE)
-12      4     CRC32 of original data (u32 LE)
+User data
+    │
+    ▼
+[Compression + codec encoding]
+    │
+    ▼
+[Chunked into 500-byte pieces]
+    │
+    ├──► Transaction memo field   ← raw data, permanent in Solana tx history
+    │
+    └──► register_chunk instruction
+              │
+              ▼
+         ChunkRecord PDA (SHA256 hash, enforces integrity forever)
+              │
+              ▼
+         finalize_stamp instruction (collects fee, seals stamp)
+              │
+              ▼
+         StampRecord PDA (immutable, queryable forever)
 ```
 
----
-
-## Retrieve Without Our Scripts
-
-To retrieve stamped data using only a Solana RPC client:
-
-1. Derive stamp PDA: `findPDA(["perm_stamp", stamp_id], PROGRAM_ID)`
-2. Fetch PDA account → decode StampRecord (see SPEC.md for layout)
-3. For each chunk: derive chunk PDA `findPDA(["perm_chunk", stamp_id, chunk_index_le], PROGRAM_ID)`
-4. Scan transaction logs from the payer address for: `Memo (len N): "PERM:<stamp_id>:<idx>:<total>:<base64>"`
-5. Verify each chunk: `sha256(chunk_data)` must match `chunk_record.chunk_hash`
-6. Concatenate chunks → zstd decompress → strip 16-byte header → verify CRC32
-
-Any RPC client in any language. No SDK needed.
+**Max single stamp:** ~256KB (512 chunks × 500 bytes)  
+**Max multipart file:** ~65MB (256 stamps × 512 chunks × 500 bytes)
 
 ---
 
-## Live Stamps (Examples)
+## 📜 Protocol Spec
 
-| Stamp ID | Codec | Data | Chunks |
-|----------|-------|------|--------|
-| `60812828cde4` | UTF8_TEXT | 135 bytes | 1 |
-| `be2df2d3afb8` | UTF8_TEXT | 1,195 bytes | 1 |
-| `6124397f0aa1` | MATHSCI | 10,392 bytes | 8 |
-| `65cc8935117d` | UTF8_TEXT | 268 bytes | 1 |
+Full wire format specification: [SPEC.md](./SPEC.md)  
+Stamped on-chain (immutable proof of authorship): `8020d25ffad2`
 
-All permanently retrievable from X1 mainnet. No expiry. No fees.
+Technical whitepaper: [WHITEPAPER.md](./WHITEPAPER.md)  
+Stamped on-chain: `ce15dc1054be`
 
 ---
 
-## File Structure
+## 🏗️ Repository Structure
 
 ```
 permadata-protocol/
-├── README.md          ← you are here
-├── SPEC.md            ← full protocol specification
-├── ROADMAP.md         ← development roadmap
-├── demo.mjs           ← stamp any file to X1
-├── retrieve.mjs       ← retrieve any stamp from X1
-└── permadata-program/ ← Anchor on-chain program (Rust)
-    └── programs/
-        └── permadata-program/
-            └── src/lib.rs
+├── permadata-program/          ← Rust/Anchor on-chain program
+│   └── programs/permadata-program/src/lib.rs   ← 1,200+ lines, 10 codecs
+├── demos/                      ← Working demo scripts (Node.js)
+│   ├── stamp.mjs               ← Interactive stamp CLI
+│   ├── retrieve.mjs            ← Retrieve by stamp ID
+│   ├── demo-text.mjs           ← Text/document demo
+│   ├── demo-mathsci.mjs        ← Scientific data demo
+│   ├── demo-image.mjs          ← Image demo
+│   ├── demo-audio.mjs          ← Audio demo
+│   └── demo-binary.mjs         ← Binary/executable demo
+├── judge-package/              ← Self-contained package for judges
+│   ├── stamp.mjs               ← Stamp any file
+│   └── retrieve.mjs            ← Retrieve by stamp ID
+├── SPEC.md                     ← Full protocol specification
+└── WHITEPAPER.md               ← Technical whitepaper
 ```
 
 ---
 
-## License
+## 🧪 Verify It Yourself
 
-MIT. Build on it.
+The Solana program is live. Check it:
+```bash
+solana program show ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi --url mainnet-beta
+```
+
+See a live stamp on Solana Explorer:  
+`https://explorer.solana.com/tx/4wjjeehUSAoZX3vXSFs22nHE2b5t2xE8tMB9yZLP7Rxr7tGwK6PNcPUbUmMzyipkJjHy3HWczHaPrW2HpSTmHCFN`
 
 ---
 
-*"The chain is the law. Everything else is optional."*
+## 👤 Builder
+
+**Arnett Esters** | Detroit, Michigan  
+Former trauma nurse → blockchain infrastructure builder  
+x1scroll.io | permadata.io | @ArnettX1
+
+*"Protocols are just bodies that can't bleed. Same precision. Same zero-error discipline. Different stakes."*
+
+---
+
+*Permadata Protocol v1.0.0 — Built during the Solana Frontier Hackathon, May 2026*  
+*Deployed on Solana mainnet and X1 Network. No servers. No subscriptions. Forever.*
