@@ -27,7 +27,7 @@ import { homedir } from 'os';
 import { basename } from 'path';
 
 // ── Config ─────────────────────────────────────────────────────
-const RPC      = 'https://api.mainnet-beta.solana.com';
+const RPC      = 'https://solana-mainnet.g.alchemy.com/v2/8V4f8qxT3z9Eo-lO76zb6KZXhaU4N3Df';
 const PROG     = new PublicKey('ENkUDdUvd65KexkWBYPwy2BfyHepaY6puvjuVXpbsvMi');
 const MEMO_PK  = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 const MAX_CHUNK = 500;
