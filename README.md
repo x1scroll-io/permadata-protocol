@@ -1,20 +1,36 @@
 # Permadata Protocol
 
-**Permanent data storage — dual-chain. On Solana AND X1.**  
-**Replicated across 2,000+ validators.**  
-**Zero servers. Zero hosting. Zero trust. Pay once, live forever.**
+**Permanent hash anchors on-chain. Data retrievable via archival RPCs.**  
+**Dual-chain: Solana + X1.**  
+**Same model as Ethereum calldata — integrity on-chain, availability in history.**
 
 ---
 
 ## 🔴 Everyone else gives you a pointer. We give you the data.
 
 Most "permanent" storage is lying to you:
-- **Arweave** → stamps a hash on Solana, stores data on a different chain
+- **Arweave** → storage proofs with 30x+ cost premium
 - **IPFS** → dies when pinning services stop paying
 - **Shadow Drive** → went dark for months in 2023
 - **Magic Eden CDN** → centralized, they control your NFT metadata
 
-**Permadata stores data directly in Solana transaction history.** Every validator holds a copy. No server to go offline. No subscription to forget to pay. No company to go bankrupt.
+**Permadata stores the SHA-256 hash of your data in a permanent on-chain PDA.**
+The raw data is written to an immutable transaction instruction on Solana or X1.
+The hash is the integrity anchor — permanent and trustless.
+The data itself is retrievable through archival full-history RPC nodes.
+This is the same separation Ethereum makes between calldata (historical) and state (active).
+
+**Why this matters:** Storing 28.9MB in a transaction costs $0.000058.
+Storing it in account state would cost tens of thousands of dollars in rent-exemption.
+The hash gives you cryptographic proof forever. The archival layer gives you retrieval.
+
+**On X1, retrieval is guaranteed** — we run the archival node (x1scroll.io).
+**On Solana, retrieval is market-backed** — multiple RPC providers archive full history
+(Triton, Helius, Syndica) because the chain has economic value.
+
+The protocol makes a deliberate trade-off: integrity anchors on-chain,
+availability through the archival market. Same design as Ethereum calldata,
+not Filecoin's storage proofs — which is why it's orders of magnitude cheaper.
 
 ---
 
