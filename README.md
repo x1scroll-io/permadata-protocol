@@ -1,6 +1,7 @@
 # Permadata Protocol
 
-**Permanent data storage on Solana. Replicated across 2,000+ validators.**  
+**Permanent data storage — dual-chain. On Solana AND X1.**  
+**Replicated across 2,000+ validators.**  
 **Zero servers. Zero hosting. Zero trust. Pay once, live forever.**
 
 ---
